@@ -1,0 +1,13 @@
+{
+    "auth": {
+        "register":{
+            "email": "string",
+            "password":  "string",
+            "name":  "string"
+        },
+        "login": {
+            "email": "string",
+            "password":  "string"
+        }
+    }
+}
