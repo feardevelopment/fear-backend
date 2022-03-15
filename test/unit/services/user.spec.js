@@ -9,8 +9,6 @@ const ENDPOINTS = TestService.ENDPOINTS
 describe("Test actions", () => {
 	const broker = new ServiceBroker({ logger: false })
 	const service = broker.createService(TestService)
-
-    console.log(service.adapter);
 	jest.spyOn(service.adapter, "findOne");
 	jest.spyOn(service.adapter, "insert");
     
