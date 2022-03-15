@@ -12,6 +12,7 @@ const { hash } = require('../utils/utils')
  */
 
 const authTokens = {}
+const deviceTokens = {}
 
 module.exports = {
 	name: "auth",
@@ -67,14 +68,12 @@ module.exports = {
 		},
 	},
 
-    deviceTokens: {},
-
 	events: {},
 
 	methods: {
         async createDeviceToken(device) {
             const token = await generateToken()
-            this.deviceTokens[device] = token
+            deviceTokens[device] = token
             return token
         },
 
