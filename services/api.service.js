@@ -2,6 +2,10 @@
 
 const ApiGateway = require("moleculer-web");
 
+const AUTH_ENDPOINTS = require("./auth.service").ENDPOINTS
+
+const RESPONSES = require('../commons/responses.json')
+
 /**
  * @typedef {import('moleculer').Context} Context Moleculer's Context
  * @typedef {import('http').IncomingMessage} IncomingRequest Incoming HTTP Request
@@ -15,7 +19,7 @@ module.exports = {
 	// More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
 	settings: {
 		// Exposed port
-		port: process.env.PORT || 3000,
+		port: process.env.PORT || 3001,
 
 		// Exposed IP
 		ip: "0.0.0.0",
@@ -48,7 +52,12 @@ module.exports = {
 				autoAliases: true,
 
 				aliases: {
-
+					async "POST register"(req, res) {
+						const result = await req.$service.broker.call(AUTH_ENDPOINTS.REGISTER, req.$params)
+						const response =  (result ? RESPONSES.auth.register.success : RESPONSES.auth.register.failure)
+						const stringified = JSON.stringify(response)
+						res.end(stringified)
+					}
 				},
 
 				/** 
