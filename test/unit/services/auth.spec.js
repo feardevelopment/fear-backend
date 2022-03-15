@@ -125,6 +125,32 @@ describe("Test actions", () => {
             expect(actual.token).not.toBeFalsy()
             expect(actual.token.length).toBeGreaterThan(50)
         })
+
+        it('should return a further authentication request when logging in with a user that has a device', async () => {
+			// Given
+            const expected = responses.auth.login["2fa"]
+            const broker = new ServiceBroker({ logger: false })
+            const service = broker.createService(TestService)
+            UserService.actions.getUser = jest.fn(async () => Promise.resolve({
+                    name: 'name',
+                    password: hash('password'),
+                    email: 'email',
+                    device: 'some device ID'
+                }))
+            const userService = broker.createService(UserService)
+            await broker.start()
+
+            // When
+            const actual = await broker.call(ENDPOINTS.LOGIN, {
+                email: "non@existing.user",
+                password: 'password'
+            })
+
+            // Then
+            expect(actual.code).toEqual(expected.code)
+            expect(actual.loginIdentifier).not.toBeFalsy()
+            expect(actual.loginIdentifier.length).toBeGreaterThan(10)
+        })
     })
 })
 
