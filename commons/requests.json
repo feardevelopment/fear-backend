@@ -9,5 +9,19 @@
             "email": "string",
             "password":  "string"
         }
+    },
+
+    "user": {
+        "exists": {
+            "email": "string"
+        },
+        "get": {
+            "email": "string"
+        },
+        "create": {
+            "email": "string",
+            "password":  "string",
+            "name":  "string"
+        }
     }
 }

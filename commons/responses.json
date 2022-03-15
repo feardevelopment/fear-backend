@@ -1,0 +1,28 @@
+{
+    "auth": {
+        "register": {
+            "success": {
+                "code": 200,
+                "message": "success"
+            },
+            "failure": {
+                "code": 300,
+                "message": "fail"
+            }
+        },
+        "login": {
+            "fail":{
+                "code": 403,
+                "message": "Wrong email or password!"
+            },
+            "2fa": {
+                "code": 202,
+                "loginIdentifier": "string"
+            },
+            "success": {
+                "code": 200,
+                "token": "string"
+            }
+        }
+    }
+}
