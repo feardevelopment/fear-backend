@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 
 
 /**
@@ -6,21 +6,21 @@
  */
 
 module.exports = {
-	name: "mark",
+    name: 'mark',
     
-	settings: {},
+    settings: {},
 
-	dependencies: [],
+    dependencies: [],
 
-	actions: {},
+    actions: {},
 
-	events: {},
+    events: {},
 
-	methods: {},
+    methods: {},
 
-	created() {},
+    created() {},
 
-	async started() {},
+    async started() {},
 
-	async stopped() {}
-};
+    async stopped() {}
+}

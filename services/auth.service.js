@@ -1,9 +1,9 @@
-"use strict";
+'use strict'
 
 const requests = require('../commons/requests.json').auth
 const responses = require('../commons/responses.json').auth
 const USER_ENDPOINTS = require('./user.service').ENDPOINTS
-const { generateToken } = require('../utils/utils');
+const { generateToken } = require('../utils/utils')
 const { hash } = require('../utils/utils')
 
 
@@ -15,41 +15,41 @@ const authTokens = {}
 const deviceTokens = {}
 
 module.exports = {
-	name: "auth",
+    name: 'auth',
     
-	settings: {},
+    settings: {},
 
     ENDPOINTS: {
-        REGISTER: "auth.register",
-        LOGIN: "auth.login"
+        REGISTER: 'auth.register',
+        LOGIN: 'auth.login'
     },
 
-	dependencies: [],
+    dependencies: [],
 
-	actions: {
-		register: {
-			params: requests.register,
-			/** @param {Context} ctx  */
-			async handler(ctx) {
-				const userData = ctx.params
-				const exists = await ctx.broker.call(USER_ENDPOINTS.EXISTS, {email: userData.email })
-				if(exists){
-					return false
-				}
+    actions: {
+        register: {
+            params: requests.register,
+            /** @param {Context} ctx  */
+            async handler(ctx) {
+                const userData = ctx.params
+                const exists = await ctx.broker.call(USER_ENDPOINTS.EXISTS, {email: userData.email })
+                if(exists){
+                    return false
+                }
                 const userCreationRequest = {...userData}
-				const hashedPassword = hash(userData.password)
+                const hashedPassword = hash(userData.password)
                 userCreationRequest.password = hashedPassword
-				await ctx.broker.call(USER_ENDPOINTS.CREATE, userCreationRequest)
-				return true
-			}
-		},
+                await ctx.broker.call(USER_ENDPOINTS.CREATE, userCreationRequest)
+                return true
+            }
+        },
 
-		login: {
-			params: requests.login,
-			/** 
+        login: {
+            params: requests.login,
+            /** 
              * @param {Context} ctx 
              */
-			async handler(ctx) {
+            async handler(ctx) {
                 const user = await ctx.broker.call(USER_ENDPOINTS.GET, {email: ctx.params.email})
                 const passwordHash = hash(ctx.params.password)
 
@@ -64,13 +64,13 @@ module.exports = {
 
                 const token = await this.createAuthToken(user)
                 return this.successfulAuthentication(token)
-			}
-		},
-	},
+            }
+        },
+    },
 
-	events: {},
+    events: {},
 
-	methods: {
+    methods: {
         async createDeviceToken(device) {
             const token = await generateToken()
             deviceTokens[device] = token
@@ -96,9 +96,9 @@ module.exports = {
         }
     },
 
-	created() {},
+    created() {},
 
-	async started() {},
+    async started() {},
 
-	async stopped() {}
-};
+    async stopped() {}
+}

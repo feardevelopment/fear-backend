@@ -38,6 +38,10 @@ build/Release
 node_modules/
 jspm_packages/
 
+package_lock.json
+coverage
+
+
 # Typescript v1 declaration files
 typings/
 

@@ -8,7 +8,8 @@
     "cli": "moleculer connect NATS",
     "ci": "jest --watch",
     "test": "jest --coverage",
-    "lint": "eslint services"
+    "lint": "eslint services",
+    "lint:fix": "eslint --fix ."
   },
   "keywords": [
     "microservices",
