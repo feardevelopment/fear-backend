@@ -14,7 +14,8 @@ module.exports = {
     ENDPOINTS: {
         EXISTS: 'user.exists',
         CREATE: 'user.create',
-        GET: 'user.getUser'
+        GET: 'user.getUser',
+        ADD_DEVICE: 'user.addDevice'
     },
     
     mixins: [DbMixin('user')],
@@ -49,12 +50,19 @@ module.exports = {
             }
         },
         getUser:{
-            params: {email: 'string'},
+            params: requests.get,
             /** @param {Context} ctx  */
             async handler(ctx) {
                 return this.adapter.findOne({email: ctx.params.email})
             }
         },
+		addDevice: {
+			params: requests.addDevice,
+			/** @param {Context} ctx */
+			async handler(ctx) {
+				return this.adapter.update({email: ctx.params.email}, {device: {deviceID: ctx.params.deviceID, secret: ctx.params.secret}})
+			}
+		}
     },
 
     events: {},

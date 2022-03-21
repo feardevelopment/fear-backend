@@ -152,5 +152,7 @@ describe('Test actions', () => {
             expect(actual.loginIdentifier.length).toBeGreaterThan(10)
         })
     })
+
+    
 })
 

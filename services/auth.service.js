@@ -13,6 +13,8 @@ const { hash } = require('../utils/utils')
 
 const authTokens = {}
 const deviceTokens = {}
+const deviceRegistrations= {}
+
 
 module.exports = {
     name: 'auth',
@@ -66,6 +68,54 @@ module.exports = {
                 return this.successfulAuthentication(token)
             }
         },
+
+        verifyLogin: {
+            params: requests.verifyLogin,
+            /** 
+             * @param {Context} ctx 
+             */
+             async handler(ctx) {
+                const params = ctx.params
+                const secret = deviceTokens[params.loginIdentifier].device.secret
+                return this.validateToken(params.token, secret)
+             }
+        },
+
+        startDeviceActivation: {
+            params: requests.startDeviceActivation,
+            /** 
+             * @param {Context} ctx 
+             */
+             async handler(ctx) {
+                 const device = ctx.params
+
+                 return this.startDeviceActivationFlow(device)
+                /**
+                 * create and respond a secret (totp) and an identifier. (to be used at verifyDeviceActivation)
+                 */
+             }
+        },
+
+        verifyDeviceActivation: {
+            params: requests.verifyDeviceActivation,
+            /** 
+             * @param {Context} ctx 
+             */
+             async handler(ctx) {
+                 const params = ctx.params
+                 const activationFlow = deviceRegistrations[params.identifier]
+
+                 if(!activationFlow){
+                     throw new Error('no activation flow found by identifier' + params.identifier)
+                 }
+
+                 if(this.validateToken(params.token, activationFlow.secret)){
+                     ctx.broker.call(USER_ENDPOINTS.ADD_DEVICE, activationFlow)
+                 }
+             }
+        },
+
+
     },
 
     events: {},
@@ -73,7 +123,10 @@ module.exports = {
     methods: {
         async createDeviceToken(device) {
             const token = await generateToken()
-            deviceTokens[device] = token
+            deviceTokens[device.deviceID] = {
+                token,
+                device
+            }  
             return token
         },
 
@@ -93,6 +146,22 @@ module.exports = {
             const response = responses.login.success
             response.token = token
             return response
+        },
+
+        async startDeviceActivationFlow(device){
+            const identifier = await generateToken()
+            deviceRegistrations[identifier] = {
+                secret: 'secret',
+                device: device
+            }
+            return {
+                identifier,
+                secret: 'secret'
+            }
+        },
+
+        async validateToken(token, secret){
+            return true
         }
     },
 

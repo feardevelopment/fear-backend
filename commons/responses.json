@@ -23,6 +23,14 @@
                 "code": 200,
                 "token": "string"
             }
+        },
+        "startDeviceActivation": {
+            "secret": "string",
+            "identifier": "string"
+        },
+        "verifyDeviceActivation":{
+            "code":"string",
+            "message": "string"
         }
     }
 }

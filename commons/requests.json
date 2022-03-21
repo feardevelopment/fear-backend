@@ -8,6 +8,19 @@
         "login": {
             "email": "string",
             "password":  "string"
+        },
+        "verifyLogin": {
+            "loginIdentifier": "string",
+            "token": "string"
+        },
+        "startDeviceActivation": {
+            "email": "string",
+            "deviceID": "string",
+            "secret": "string"
+        },
+        "verifyDeviceActivation":{
+            "token":"string",
+            "identifier": "string"
         }
     },
 
@@ -22,6 +35,11 @@
             "email": "string",
             "password":  "string",
             "name":  "string"
+        },
+        "addDevice": {
+            "email": "string",
+            "deviceID": "string",
+            "secret": "string"
         }
     }
 }
