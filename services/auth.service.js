@@ -23,7 +23,10 @@ module.exports = {
 
     ENDPOINTS: {
         REGISTER: 'auth.register',
-        LOGIN: 'auth.login'
+        LOGIN: 'auth.login',
+        VERIFY_LOGIN: 'auth.verifyLogin',
+        START_DEVICE_ACTIVATION: 'auth.startDeviceActivation',
+        VERIFY_DEVICE_ACTIVATION: 'auth.verifyDeviceActivation'
     },
 
     dependencies: [],
@@ -109,9 +112,19 @@ module.exports = {
                      throw new Error('no activation flow found by identifier' + params.identifier)
                  }
 
-                 if(this.validateToken(params.token, activationFlow.secret)){
-                     ctx.broker.call(USER_ENDPOINTS.ADD_DEVICE, activationFlow)
+                 const isValidToken = await this.validateToken(params.token, activationFlow.secret)
+                 if(!isValidToken){
+                     return false
                  }
+
+                 console.log(activationFlow)
+                 const device = {
+                     secret: activationFlow.secret,
+                     ...activationFlow.device
+                 }
+                 
+                 await ctx.broker.call(USER_ENDPOINTS.ADD_DEVICE, device)
+                 return true
              }
         },
 

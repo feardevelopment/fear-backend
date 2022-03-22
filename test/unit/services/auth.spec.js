@@ -13,6 +13,7 @@ const USER_ENDPOINTS = UserService.ENDPOINTS
 
 describe('Test actions', () => {
 
+
     describe('register', () => {
         it('should return true when registering a non-existing user', async () => {
             // Given
@@ -150,6 +151,50 @@ describe('Test actions', () => {
             expect(actual.code).toEqual(expected.code)
             expect(actual.loginIdentifier).not.toBeFalsy()
             expect(actual.loginIdentifier.length).toBeGreaterThan(10)
+        })
+    })
+
+
+    describe('Device flows', () => {
+
+        it('should register a new device successfully', async () => {
+            const broker = new ServiceBroker({ logger: false })
+            const service = broker.createService(TestService)
+            const userService = broker.createService(UserService)
+            await broker.start()
+            await broker.call('user.clear', {})
+            const registerData = {
+                email: 'non@existing.user',
+                password: 'password',
+                name: 'username'
+            }
+
+            await broker.call(ENDPOINTS.REGISTER, registerData)
+
+            const loginRequest = await broker.call(ENDPOINTS.LOGIN, registerData)
+
+            const authToken = loginRequest.token
+            // start device registration
+            const deviceRegistrationData = {
+                email: registerData.email,
+                deviceID: '111111-222222'
+            }
+            const deviceActivationRequest = await broker.call(ENDPOINTS.START_DEVICE_ACTIVATION, deviceRegistrationData)
+
+            const token = 'CREATE TOKEN BY USING SECRET'
+            const verifyDeviceActivationRequestData = {
+                identifier: deviceActivationRequest.identifier,
+                token
+            }
+            const verifyDeviceActivationRequest = await broker.call(ENDPOINTS.VERIFY_DEVICE_ACTIVATION, verifyDeviceActivationRequestData)
+
+            expect(verifyDeviceActivationRequest).toBeTruthy()
+
+            const loginRequestWithDevice = await broker.call(ENDPOINTS.LOGIN, registerData)
+            
+            expect(loginRequestWithDevice.code).toEqual(202)
+            expect(loginRequestWithDevice).toHaveProperty('loginIdentifier')
+            
         })
     })
 

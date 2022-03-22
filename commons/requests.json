@@ -15,8 +15,7 @@
         },
         "startDeviceActivation": {
             "email": "string",
-            "deviceID": "string",
-            "secret": "string"
+            "deviceID": "string"
         },
         "verifyDeviceActivation":{
             "token":"string",
