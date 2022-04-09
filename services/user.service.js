@@ -1,6 +1,6 @@
 'use strict'
 
-const requests = require('../commons/requests.json').user
+const requests = require('./common/requests.json').user
 
 const DbMixin = require('../mixins/db.mixin')
 
@@ -69,7 +69,7 @@ module.exports = {
         clear: {
             params: {},
             async handler(ctx) {
-                return this.adapter.clear()
+                return await this.adapter.clear()
             }
         }
     },

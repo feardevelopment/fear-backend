@@ -1,10 +1,11 @@
 'use strict'
 
-const requests = require('../commons/requests.json').auth
-const responses = require('../commons/responses.json').auth
+const requests = require('./common/requests.json').auth
+const responses = require('./common/responses.json').auth
 const USER_ENDPOINTS = require('./user.service').ENDPOINTS
 const { generateToken } = require('../utils/utils')
 const { hash } = require('../utils/utils')
+const role = require('./common/role.json')
 
 
 /**
@@ -24,6 +25,7 @@ module.exports = {
     ENDPOINTS: {
         REGISTER: 'auth.register',
         LOGIN: 'auth.login',
+        VERIFY: 'auth.verify',
         VERIFY_LOGIN: 'auth.verifyLogin',
         START_DEVICE_ACTIVATION: 'auth.startDeviceActivation',
         VERIFY_DEVICE_ACTIVATION: 'auth.verifyDeviceActivation'
@@ -36,14 +38,21 @@ module.exports = {
             params: requests.register,
             /** @param {Context} ctx  */
             async handler(ctx) {
+                console.log(`Registering user with email ${ctx.params.email}`)
+                
                 const userData = ctx.params
                 const exists = await ctx.broker.call(USER_ENDPOINTS.EXISTS, {email: userData.email })
+
                 if(exists){
+                    console.log(`User already exists with email ${userData.email}`)
                     return false
                 }
+
                 const userCreationRequest = {...userData}
                 const hashedPassword = hash(userData.password)
                 userCreationRequest.password = hashedPassword
+                userCreationRequest.authorization = role.ADMIN
+
                 await ctx.broker.call(USER_ENDPOINTS.CREATE, userCreationRequest)
                 return true
             }
@@ -55,20 +64,36 @@ module.exports = {
              * @param {Context} ctx 
              */
             async handler(ctx) {
+                console.log(`Logging in with ${ctx.params.email}`)
                 const user = await ctx.broker.call(USER_ENDPOINTS.GET, {email: ctx.params.email})
                 const passwordHash = hash(ctx.params.password)
 
                 if(!user || passwordHash !== user.password) {
+                    console.log(`User not exists with email ${ctx.params.email}, or Password is not matching`)
                     return responses.login.fail
                 }
 
                 if(user.device){
+                    console.log(`Creating 2FA login flow with device id ${user.device}`)
                     const deviceToken = await this.createDeviceToken(user.device)
                     return this.furtherAuthenticationNeeded(deviceToken)
                 }
 
+                console.log(`Login successful, creating token for ${user.email}`)
                 const token = await this.createAuthToken(user)
                 return this.successfulAuthentication(token)
+            }
+        },
+
+
+        verify: {
+            params: requests.verify,
+            /** 
+             * @param {Context} ctx 
+             */
+            async handler(ctx) {
+                const user = authTokens[ctx.params.token]
+                return user || null
             }
         },
 
@@ -77,11 +102,11 @@ module.exports = {
             /** 
              * @param {Context} ctx 
              */
-             async handler(ctx) {
+            async handler(ctx) {
                 const params = ctx.params
                 const secret = deviceTokens[params.loginIdentifier].device.secret
                 return this.validateToken(params.token, secret)
-             }
+            }
         },
 
         startDeviceActivation: {
@@ -89,14 +114,14 @@ module.exports = {
             /** 
              * @param {Context} ctx 
              */
-             async handler(ctx) {
-                 const device = ctx.params
+            async handler(ctx) {
+                const device = ctx.params
 
-                 return this.startDeviceActivationFlow(device)
+                return this.startDeviceActivationFlow(device)
                 /**
                  * create and respond a secret (totp) and an identifier. (to be used at verifyDeviceActivation)
                  */
-             }
+            }
         },
 
         verifyDeviceActivation: {
@@ -104,28 +129,28 @@ module.exports = {
             /** 
              * @param {Context} ctx 
              */
-             async handler(ctx) {
-                 const params = ctx.params
-                 const activationFlow = deviceRegistrations[params.identifier]
+            async handler(ctx) {
+                const params = ctx.params
+                const activationFlow = deviceRegistrations[params.identifier]
 
-                 if(!activationFlow){
-                     throw new Error('no activation flow found by identifier' + params.identifier)
-                 }
+                if(!activationFlow){
+                    throw new Error('no activation flow found by identifier' + params.identifier)
+                }
 
-                 const isValidToken = await this.validateToken(params.token, activationFlow.secret)
-                 if(!isValidToken){
-                     return false
-                 }
+                const isValidToken = await this.validateToken(params.token, activationFlow.secret)
+                if(!isValidToken){
+                    return false
+                }
 
-                 console.log(activationFlow)
-                 const device = {
-                     secret: activationFlow.secret,
-                     ...activationFlow.device
-                 }
+                console.log(activationFlow)
+                const device = {
+                    secret: activationFlow.secret,
+                    ...activationFlow.device
+                }
                  
-                 await ctx.broker.call(USER_ENDPOINTS.ADD_DEVICE, device)
-                 return true
-             }
+                await ctx.broker.call(USER_ENDPOINTS.ADD_DEVICE, device)
+                return true
+            }
         },
 
 
@@ -175,6 +200,10 @@ module.exports = {
 
         async validateToken(token, secret){
             return true
+        },
+
+        mapUserCreationObject(userObject){
+
         }
     },
 
