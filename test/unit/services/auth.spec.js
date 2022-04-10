@@ -5,7 +5,7 @@ const { ValidationError } = require('moleculer').Errors
 const TestService = require('../../../services/auth.service')
 const UserService = require('../../../services/user.service')
 
-const responses = require('../../../services/commons/responses.json')
+const responses = require('../../../services/common/responses.json')
 const { hash } = require('../../../utils/utils')
 
 const ENDPOINTS = TestService.ENDPOINTS
@@ -186,7 +186,7 @@ describe('Test actions', () => {
             }
             const deviceActivationRequest = await broker.call(ENDPOINTS.START_DEVICE_ACTIVATION, deviceRegistrationData)
 
-            const token = 'CREATE TOKEN BY USING SECRET'
+            const token = '000-000'
             const verifyDeviceActivationRequestData = {
                 identifier: deviceActivationRequest.identifier,
                 token

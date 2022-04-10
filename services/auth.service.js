@@ -199,7 +199,7 @@ module.exports = {
         },
 
         async validateToken(token, secret){
-            return true
+            return token === '000-000'
         },
 
         mapUserCreationObject(userObject){
