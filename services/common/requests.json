@@ -13,7 +13,7 @@
             "token": "string"
         },
         "verifyLogin": {
-            "loginIdentifier": "string",
+            "flowID": "string",
             "token": "string"
         },
         "startDeviceActivation": {

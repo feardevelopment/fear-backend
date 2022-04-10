@@ -75,7 +75,7 @@ module.exports = {
 
                 if(user.device){
                     console.log(`Creating 2FA login flow with device id ${user.device}`)
-                    const deviceToken = await this.createDeviceToken(user.device)
+                    const deviceToken = await this.createDeviceToken(user.device, user)
                     return this.furtherAuthenticationNeeded(deviceToken)
                 }
 
@@ -104,8 +104,13 @@ module.exports = {
              */
             async handler(ctx) {
                 const params = ctx.params
-                const secret = deviceTokens[params.loginIdentifier].device.secret
-                return this.validateToken(params.token, secret)
+                const secret = deviceTokens[params.flowID].device.secret
+                if(this.validateToken(params.token, secret)){
+                    const user = deviceTokens[params.flowID].user
+                    const token = await this.createAuthToken(user)
+                    return this.successfulAuthentication(token)
+                }
+                return responses.login.fail
             }
         },
 
@@ -142,7 +147,6 @@ module.exports = {
                     return false
                 }
 
-                console.log(activationFlow)
                 const device = {
                     secret: activationFlow.secret,
                     ...activationFlow.device
@@ -161,11 +165,12 @@ module.exports = {
     events: {},
 
     methods: {
-        async createDeviceToken(device) {
+        async createDeviceToken(device, user) {
             const token = await generateToken()
-            deviceTokens[device.deviceID] = {
+            deviceTokens[token] = {
                 token,
-                device
+                device,
+                user
             }  
             return token
         },
@@ -178,7 +183,7 @@ module.exports = {
 
         furtherAuthenticationNeeded(deviceToken) {
             const response = responses.login['2fa']
-            response.loginIdentifier = deviceToken
+            response.flowID = deviceToken
             return response
         },
 

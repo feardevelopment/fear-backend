@@ -65,4 +65,23 @@ module.exports = {
         const stringified = JSON.stringify(response)
         res.end(stringified)
     },
+
+    async 'POST auth/login/verify/:flowID'(req, res) {
+        const ctx = using(req, res)
+        if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
+
+        console.log(`Verifying login with flowID ${req.$params.flowID}`)
+
+        const params = {
+            flowID: req.$params.flowID,
+            token: req.$params.token,
+        }
+        
+        const result = await ctx.call(AUTH_ENDPOINTS.VERIFY_LOGIN)
+            .with(params)
+            .then()
+            
+        const stringified = JSON.stringify(result)
+        res.end(stringified)
+    },
 }
