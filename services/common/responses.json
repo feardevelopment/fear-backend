@@ -26,7 +26,7 @@
         },
         "startDeviceActivation": {
             "secret": "string",
-            "identifier": "string"
+            "flowID": "string"
         },
         "verifyDeviceActivation":{
             "code":"string",

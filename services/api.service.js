@@ -26,7 +26,12 @@ module.exports = {
         ip: '0.0.0.0',
 
         // Global Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
-        use: [],
+        use: [
+            function(err, req, res, next) {
+            this.logger.error("Error is occured in middlewares!")
+                this.sendError(req, res, err)
+            }
+        ],
 
         routes: [routes],
 
@@ -44,6 +49,11 @@ module.exports = {
 
             // Options to `server-static` module
             options: {}
+        },
+        onError(req, res, err) {
+            res.setHeader("Content-Type", "text/plain")
+            res.writeHead(501)
+            res.end("Global error: " + err.message)
         }
     },
 

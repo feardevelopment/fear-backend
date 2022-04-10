@@ -22,7 +22,7 @@
         },
         "verifyDeviceActivation":{
             "token":"string",
-            "identifier": "string"
+            "flowID": "string"
         }
     },
 

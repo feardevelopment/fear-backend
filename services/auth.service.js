@@ -131,10 +131,10 @@ module.exports = {
              */
             async handler(ctx) {
                 const params = ctx.params
-                const activationFlow = deviceRegistrations[params.identifier]
+                const activationFlow = deviceRegistrations[params.flowID]
 
                 if(!activationFlow){
-                    throw new Error('no activation flow found by identifier' + params.identifier)
+                    throw new Error('no activation flow found by identifier' + params.flowID)
                 }
 
                 const isValidToken = await this.validateToken(params.token, activationFlow.secret)
@@ -149,12 +149,14 @@ module.exports = {
                 }
                  
                 await ctx.broker.call(USER_ENDPOINTS.ADD_DEVICE, device)
+                delete deviceRegistrations[params.flowID]
                 return true
             }
         },
 
 
     },
+    
 
     events: {},
 
@@ -193,7 +195,7 @@ module.exports = {
                 device: device
             }
             return {
-                identifier,
+                flowID: identifier,
                 secret: 'secret'
             }
         },
