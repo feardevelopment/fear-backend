@@ -27,8 +27,9 @@ module.exports = {
 
         // Global Express middlewares. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Middlewares
         use: [
+            // eslint-disable-next-line no-unused-vars
             function(err, req, res, next) {
-            this.logger.error("Error is occured in middlewares!")
+                this.logger.error('Error is occured in middlewares!')
                 this.sendError(req, res, err)
             }
         ],
@@ -51,9 +52,9 @@ module.exports = {
             options: {}
         },
         onError(req, res, err) {
-            res.setHeader("Content-Type", "text/plain")
+            res.setHeader('Content-Type', 'text/plain')
             res.writeHead(501)
-            res.end("Global error: " + err.message)
+            res.end('Global error: ' + err.message)
         }
     },
 
@@ -84,15 +85,5 @@ module.exports = {
             }
             return null
         },
-
-        /**
-		 * @param {Context} ctx
-		 * @param {Object} route
-		 * @param {IncomingRequest} req
-		 * @returns {Promise}
-		 */
-        async authorize(ctx, route, req) {
-            console.log('AUTHORIZATION')
-        }
     }
 }

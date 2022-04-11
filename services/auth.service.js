@@ -205,13 +205,11 @@ module.exports = {
             }
         },
 
+        // eslint-disable-next-line no-unused-vars
         async validateToken(token, secret){
             return token === '000-000'
         },
 
-        mapUserCreationObject(userObject){
-
-        }
     },
 
     created() {},

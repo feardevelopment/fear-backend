@@ -14,10 +14,10 @@ module.exports = {
     autoAliases: false,
     callingOptions: {},
     onBeforeCall(ctx, route, req, res) {
-        res.setHeader("Content-Type", "application/json; charset=utf-8")
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
     },
     onError(req, res, err) {
-        res.setHeader("Content-Type", "application/json; charset=utf-8")
+        res.setHeader('Content-Type', 'application/json; charset=utf-8')
         res.writeHead(500)
         res.end(JSON.stringify(err))
     },

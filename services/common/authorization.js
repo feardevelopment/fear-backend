@@ -1,6 +1,3 @@
-
-const ApiGateway = require('moleculer-web')
-const { callingOptions } = require('../routes')
 const role = require('./role.json')
 
 module.exports = {
@@ -13,6 +10,7 @@ module.exports = {
                     with: function (params) {
                         return{
                             then: async function (callback) {
+                                // eslint-disable-next-line no-async-promise-executor, no-unused-vars
                                 return new Promise(async (resolve, reject) => {
                                     try {
                                         const response = await req.$service.broker.call(endpoint, params)
@@ -22,10 +20,10 @@ module.exports = {
                                         }
                                         resolve(result)
                                     } catch (error) {
-                                        res.setHeader("Content-Type", "text/json")
+                                        res.setHeader('Content-Type', 'text/json')
                                         res.writeHead(501)
                                         res.end(JSON.stringify({
-                                         message: error.message
+                                            message: error.message
                                         }))
                                     }
                                 })
@@ -37,6 +35,7 @@ module.exports = {
             isAuthorized: function(required){
                 if(required === role.UNAUTHORIZED) return true
             
+                // eslint-disable-next-line
                 if(!req.$ctx?.meta?.user?.authorization) {
                     res.end(unauthenticated())
                     return false
@@ -57,18 +56,18 @@ module.exports = {
 
 function unauthorized() {
     return JSON.stringify({
-        "name": "UnAuthorizedError",
-        "message": "Unauthorized",
-        "code": 401,
-        "type": "INVALID_TOKEN"
+        'name': 'UnAuthorizedError',
+        'message': 'Unauthorized',
+        'code': 401,
+        'type': 'INVALID_TOKEN'
     })
 }
 
 function unauthenticated() {
     return JSON.stringify({
-        "name": "UnAuthorizedError",
-        "message": "Unauthorized",
-        "code": 401,
-        "type": "NO_TOKEN"
+        'name': 'UnAuthorizedError',
+        'message': 'Unauthorized',
+        'code': 401,
+        'type': 'NO_TOKEN'
     })
 }

@@ -56,19 +56,19 @@ module.exports = {
                 return this.adapter.findOne({email: ctx.params.email})
             }
         },
-		addDevice: {
-			params: requests.addDevice,
-			/** @param {Context} ctx */
-			async handler(ctx) {
+        addDevice: {
+            params: requests.addDevice,
+            /** @param {Context} ctx */
+            async handler(ctx) {
                 const user = await this.adapter.findOne({email: ctx.params.email})
                 console.log(user)
                 user.device = {deviceID: ctx.params.deviceID, secret: ctx.params.secret}
-				return this.adapter.updateById(user._id, user)
-			}
-		},
+                return this.adapter.updateById(user._id, user)
+            }
+        },
         clear: {
             params: {},
-            async handler(ctx) {
+            async handler() {
                 return await this.adapter.clear()
             }
         }
