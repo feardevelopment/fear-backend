@@ -7,7 +7,7 @@ env:
 
 
 jobs:
-  lint:
+  checks:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     steps:
@@ -17,5 +17,5 @@ jobs:
         with:
           node-version: 16.x
           cache: npm
-      - run: npm run eslint
+      - run: npm run lint
       - run: npm run test
