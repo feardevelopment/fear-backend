@@ -11,7 +11,7 @@ module.exports = {
     'extends': 'eslint:recommended',
     'parserOptions': {
         'sourceType': 'module',
-        'ecmaVersion': '2018'
+        'ecmaVersion': '2021'
     },
     'rules': {
         'indent': [
@@ -39,5 +39,6 @@ module.exports = {
         'no-mixed-spaces-and-tabs': [
             'warn'
         ]
-    }
+    },
+    'ignorePatterns': ['test/*', 'src/frontend/generated/*']
 }
