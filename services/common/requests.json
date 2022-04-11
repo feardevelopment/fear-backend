@@ -1,0 +1,47 @@
+{
+    "auth": {
+        "register":{
+            "email": "string",
+            "password":  "string",
+            "name":  "string"
+        },
+        "login": {
+            "email": "string",
+            "password":  "string"
+        },
+        "verify": {
+            "token": "string"
+        },
+        "verifyLogin": {
+            "flowID": "string",
+            "token": "string"
+        },
+        "startDeviceActivation": {
+            "email": "string",
+            "deviceID": "string"
+        },
+        "verifyDeviceActivation":{
+            "token":"string",
+            "flowID": "string"
+        }
+    },
+
+    "user": {
+        "exists": {
+            "email": "string"
+        },
+        "get": {
+            "email": "string"
+        },
+        "create": {
+            "email": "string",
+            "password":  "string",
+            "name":  "string"
+        },
+        "addDevice": {
+            "email": "string",
+            "deviceID": "string",
+            "secret": "string"
+        }
+    }
+}

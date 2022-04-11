@@ -1,0 +1,6 @@
+{
+    "UNAUTHORIZED": 0,
+    "STUDENT": 1,
+    "LECTURER": 2,
+    "ADMIN": 3
+}
