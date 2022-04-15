@@ -9,7 +9,8 @@ module.exports = {
     authorization: false,
     aliases: {
         ...require('./account'),
-        ...require('./lecturer')
+        ...require('./lecturer'),
+        ...require('./studies')
     },
     autoAliases: false,
     callingOptions: {},
