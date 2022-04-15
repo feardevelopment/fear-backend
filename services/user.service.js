@@ -1,6 +1,6 @@
 'use strict'
 
-const requests = require('./common/requests.json').user
+const requests = require('./common/request').user
 
 const DbMixin = require('../mixins/db.mixin')
 

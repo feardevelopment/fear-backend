@@ -1,8 +1,10 @@
 'use strict'
 
-const requests = require('./common/requests.json').auth
-const responses = require('./common/responses.json').auth
+const requests = require('./common/request').auth
+const responses = require('./common/response').auth
+
 const USER_ENDPOINTS = require('./user.service').ENDPOINTS
+
 const { generateToken } = require('../utils/utils')
 const { hash } = require('../utils/utils')
 const role = require('./common/role.json')

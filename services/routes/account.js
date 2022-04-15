@@ -1,5 +1,5 @@
 const AUTH_ENDPOINTS = require('../auth.service').ENDPOINTS
-const RESPONSES = require('../common/responses.json')
+const RESPONSES = require('../common/response')
 const AUTHORIZATION = require('../common/role.json')
 const { using } = require('../common/authorization')
 
