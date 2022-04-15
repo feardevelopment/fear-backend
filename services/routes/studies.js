@@ -1,5 +1,5 @@
 const STUDIES = require('../studies.service').ENDPOINTS
-const RESPONSES = require('../common/response')
+const RESPONSE = require('../common/response').studies
 const REQUESTS = require('../common/request').studies
 const AUTHORIZATION = require('../common/role.json')
 const { using } = require('../common/authorization')
@@ -14,5 +14,14 @@ module.exports = {
         
         const result = await ctx.call(STUDIES.CREATE_NEW_LECTURE).with(lectureData).then()
         res.end(JSON.stringify({result}))
+    },
+    async 'GET lecture/all'(req, res) {
+        const ctx = using(req, res)
+        if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
+
+        const result = await ctx.call(STUDIES.LIST_LECTURES).with().then()  
+        const filtered = result.map(element => filterObject(element, RESPONSE.listLectures))
+
+        res.end(JSON.stringify(filtered))
     }
 }
