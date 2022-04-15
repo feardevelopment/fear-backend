@@ -11,7 +11,8 @@ const DbMixin = require('../mixins/db.mixin')
 module.exports = {
     name: 'studies',
     ENDPOINTS: {
-        CREATE_NEW_LECTURE: 'studies.createNewLecture'
+        CREATE_NEW_LECTURE: 'studies.createNewLecture',
+        LIST_LECTURES: 'studies.listLectures'
     },
     settings: {},
 
@@ -20,7 +21,7 @@ module.exports = {
     dependencies: [],
 
     actions: {
-        createNewLecture:{
+        createNewLecture: {
             params: requests.newLectureData,
             /** @param {Context} ctx  */
             async handler(ctx) {
@@ -34,6 +35,11 @@ module.exports = {
                 return true
             }
         },
+        listLectures: {
+            async handler() {                
+                return this.adapter.find({})
+            }
+        }
     },
 
     events: {},
