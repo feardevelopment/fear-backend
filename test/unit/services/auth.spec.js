@@ -5,7 +5,7 @@ const { ValidationError } = require('moleculer').Errors
 const TestService = require('../../../services/auth.service')
 const UserService = require('../../../services/user.service')
 
-const responses = require('../../../services/common/responses.json')
+const responses = require('../../../services/common/response')
 const { hash } = require('../../../utils/utils')
 
 const ENDPOINTS = TestService.ENDPOINTS
