@@ -8,7 +8,7 @@ const { filterObject } = require('../common/mapper')
 module.exports = {
     async 'POST lecture/create'(req, res) {
         const ctx = using(req, res)
-        if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
+        if(!ctx.isAuthorized(AUTHORIZATION.ADMIN)) { return }
 
         const lectureData = filterObject(req.$params, REQUESTS.newLectureData)
         
@@ -17,7 +17,7 @@ module.exports = {
     },
     async 'GET lecture/all'(req, res) {
         const ctx = using(req, res)
-        if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
+        if(!ctx.isAuthorized(AUTHORIZATION.STUDENT)) { return }
 
         const result = await ctx.call(STUDIES.LIST_LECTURES).with().then()  
         const filtered = result.map(element => filterObject(element, RESPONSE.listLectures))
