@@ -1,5 +1,6 @@
 const auth = require('./auth')
-
+const studies = require('./studies')
 module.exports = {
-    auth
+    auth,
+    studies
 }
