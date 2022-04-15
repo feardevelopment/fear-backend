@@ -15,12 +15,25 @@ module.exports = {
         const result = await ctx.call(STUDIES.CREATE_NEW_LECTURE).with(lectureData).then()
         res.end(JSON.stringify({result}))
     },
+
+
     async 'GET lecture/all'(req, res) {
         const ctx = using(req, res)
-        if(!ctx.isAuthorized(AUTHORIZATION.STUDENT)) { return }
+        if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
 
         const result = await ctx.call(STUDIES.LIST_LECTURES).with().then()  
         const filtered = result.map(element => filterObject(element, RESPONSE.listLectures))
+
+        res.end(JSON.stringify(filtered))
+    },
+
+
+    async 'GET lecture/:lecture_id'(req, res) {
+        const ctx = using(req, res)
+        if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
+
+        const result = await ctx.call(STUDIES.FIND_LECTURE).with({code: req.$params.lecture_id}).then()  
+        const filtered = filterObject(result, RESPONSE.findLecture)
 
         res.end(JSON.stringify(filtered))
     }
