@@ -5,5 +5,8 @@ module.exports = {
         //ID of the lecturer
         lecturer: 'string',
         enrolledBy: { type: 'array', items: 'string', default: ['user'] }
+    },
+    findLecture: {
+        code: 'string'
     }
 }
