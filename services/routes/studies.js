@@ -31,8 +31,8 @@ module.exports = {
     async 'POST lecture/list'(req, res) {
         const ctx = using(req, res)
         if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
-        
-        const result = await ctx.call(STUDIES.FIND_LECTURES).with({code: req.$params.codes}).then()
+
+        const result = await ctx.call(STUDIES.FIND_LECTURES).with({codes: req.$params.codes}).then()
         const filtered = result.map(element => filterObject(element, RESPONSE.listLectures))
 
         res.end(JSON.stringify(filtered))

@@ -45,7 +45,7 @@ module.exports = {
             params: requests.findLectures,
             /** @param {Context} ctx  */
             async handler(ctx) {
-                return this.adapter.find({code: ctx.params.codes})
+                return this.adapter.find({query: {code: {$in: ctx.params.codes}}})
             }
         }
     },
