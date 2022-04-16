@@ -13,7 +13,8 @@ module.exports = {
     ENDPOINTS: {
         CREATE_NEW_LECTURE: 'studies.createNewLecture',
         LIST_LECTURES: 'studies.listLectures',
-        FIND_LECTURES: 'studies.findLectures'
+        FIND_LECTURES: 'studies.findLectures',
+        ENROLL_LECTURE: 'studies.enrollLecture'
     },
     settings: {},
 
@@ -47,7 +48,22 @@ module.exports = {
             async handler(ctx) {
                 return this.adapter.find({query: {code: {$in: ctx.params.codes}}})
             }
-        }
+        },
+        enrollLecture: {
+            params: requests.enrollLecture,
+            /** @param {Context} ctx */
+            async handler(ctx) {
+                const lecture = await this.adapter.findOne({code: ctx.params.code})
+                console.log(lecture)
+
+                if(!lecture.enrolledBy.includes(ctx.params.user)){
+                    lecture.enrolledBy.push(ctx.params.user)
+                }
+
+                return this.adapter.updateById(lecture._id, lecture)
+            }
+
+        },
     },
 
     events: {},

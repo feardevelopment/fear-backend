@@ -15,7 +15,8 @@ module.exports = {
         EXISTS: 'user.exists',
         CREATE: 'user.create',
         GET: 'user.getUser',
-        ADD_DEVICE: 'user.addDevice'
+        ADD_DEVICE: 'user.addDevice',
+        ENROLL_LECTURE: 'user.enrollLecture'
     },
     
     mixins: [DbMixin('user')],
@@ -65,6 +66,24 @@ module.exports = {
                 user.device = {deviceID: ctx.params.deviceID, secret: ctx.params.secret}
                 return this.adapter.updateById(user._id, user)
             }
+        },
+        enrollLecture: {
+            params: requests.enrollLecture,
+            /** @param {Context} ctx */
+            async handler(ctx) {
+                const user = await this.adapter.findOne({email: ctx.params.user})
+                console.log(user)
+                if(!user.enrolled){
+                    user.enrolled = []
+                }
+
+                if(!user.enrolled.includes(ctx.params.code)){
+                    user.enrolled.push(ctx.params.code)
+                }
+
+                return this.adapter.updateById(user._id, user)
+            }
+
         },
         clear: {
             params: {},

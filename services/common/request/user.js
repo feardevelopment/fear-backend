@@ -14,5 +14,9 @@ module.exports = {
         email: 'string',
         deviceID: 'string',
         secret: 'string'
+    },
+    enrollLecture: {
+        code: 'string',
+        user: 'string'
     }
 }

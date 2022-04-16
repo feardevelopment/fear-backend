@@ -8,5 +8,9 @@ module.exports = {
     },
     listLectures: {
         codes: { type: 'array', items: 'string'}
+    },
+    enrollLecture: {
+        code: 'string',
+        user: 'string'
     }
 }

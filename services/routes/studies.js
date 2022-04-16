@@ -1,4 +1,5 @@
 const STUDIES = require('../studies.service').ENDPOINTS
+const USER = require('../user.service').ENDPOINTS
 const RESPONSE = require('../common/response').studies
 const REQUESTS = require('../common/request').studies
 const AUTHORIZATION = require('../common/role.json')
@@ -36,5 +37,25 @@ module.exports = {
         const filtered = result.map(element => filterObject(element, RESPONSE.listLectures))
 
         res.end(JSON.stringify(filtered))
+    },
+
+    async 'POST lecture/enroll/:lecture_code'(req, res){
+        const ctx = using(req, res)
+        if(!ctx.isAuthorized(AUTHORIZATION.STUDENT)) { return }
+
+        const enrollData = {
+            user: req.$ctx.meta.user.email,
+            code: req.$params.lecture_code
+        }
+        
+        await Promise.all(
+            [
+                ctx.call(STUDIES.ENROLL_LECTURE).with(enrollData).then(),
+                ctx.call(USER.ENROLL_LECTURE).with(enrollData).then()
+            ]
+        )
+
+        res.end(JSON.stringify(RESPONSE.enrollLecture))
     }
+
 }

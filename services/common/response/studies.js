@@ -10,5 +10,8 @@ module.exports = {
         code: 'string',
         lecturer: 'string',
         enrolledBy: { type: 'array', items: 'string', default: ['user'] }
+    },
+    enrollLecture:{
+        message: "Success"
     }
 }
