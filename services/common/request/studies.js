@@ -4,9 +4,9 @@ module.exports = {
         code: 'string',
         //ID of the lecturer
         lecturer: 'string',
-        enrolledBy: { type: 'array', items: 'string', default: ['user'] }
+        enrolledBy: { type: 'array', items: 'string' }
     },
-    findLecture: {
-        code: 'string'
+    listLectures: {
+        codes: { type: 'array', items: 'string'}
     }
 }

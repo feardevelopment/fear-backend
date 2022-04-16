@@ -13,7 +13,7 @@ module.exports = {
     ENDPOINTS: {
         CREATE_NEW_LECTURE: 'studies.createNewLecture',
         LIST_LECTURES: 'studies.listLectures',
-        FIND_LECTURE: 'studies.findLecture'
+        FIND_LECTURES: 'studies.findLectures'
     },
     settings: {},
 
@@ -41,11 +41,11 @@ module.exports = {
                 return this.adapter.find({})
             }
         },
-        findLecture: {
-            params: requests.findLecture,
+        findLectures: {
+            params: requests.findLectures,
             /** @param {Context} ctx  */
             async handler(ctx) {
-                return this.adapter.findOne({code: ctx.params.code})
+                return this.adapter.find({code: ctx.params.codes})
             }
         }
     },
