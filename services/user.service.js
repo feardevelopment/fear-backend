@@ -16,7 +16,8 @@ module.exports = {
         CREATE: 'user.create',
         GET: 'user.getUser',
         ADD_DEVICE: 'user.addDevice',
-        ENROLL_LECTURE: 'user.enrollLecture'
+        ENROLL_LECTURE: 'user.enrollLecture',
+        DROP_LECTURE: 'user.dropLecture'
     },
     
     mixins: [DbMixin('user')],
@@ -72,7 +73,7 @@ module.exports = {
             /** @param {Context} ctx */
             async handler(ctx) {
                 const user = await this.adapter.findOne({email: ctx.params.user})
-                console.log(user)
+                
                 if(!user.enrolled){
                     user.enrolled = []
                 }
@@ -80,6 +81,28 @@ module.exports = {
                 if(!user.enrolled.includes(ctx.params.code)){
                     user.enrolled.push(ctx.params.code)
                 }
+
+                return this.adapter.updateById(user._id, user)
+            }
+
+        },
+        dropLecture: {
+            params: requests.dropLecture,
+            /** @param {Context} ctx */
+            async handler(ctx) {
+                const user = await this.adapter.findOne({email: ctx.params.user})
+
+                if(!user.enrolled){
+                    user.enrolled = []
+                }
+                
+                const lectures = new Set(user.enrolled)
+
+                if(lectures.has(ctx.params.code)) {
+                    lectures.delete(ctx.params.code)
+                    user.enrolled = Array.from(lectures)
+                }
+                
 
                 return this.adapter.updateById(user._id, user)
             }

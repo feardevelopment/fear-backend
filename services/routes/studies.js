@@ -4,7 +4,7 @@ const RESPONSE = require('../common/response').studies
 const REQUESTS = require('../common/request').studies
 const AUTHORIZATION = require('../common/role.json')
 const { using } = require('../common/authorization')
-const { filterObject } = require('../common/mapper')
+const { filterObject, filterArray } = require('../common/mapper')
 
 module.exports = {
     async 'POST lecture/create'(req, res) {
@@ -23,7 +23,7 @@ module.exports = {
         if(!ctx.isAuthorized(AUTHORIZATION.UNAUTHORIZED)) { return }
 
         const result = await ctx.call(STUDIES.LIST_LECTURES).with().then()  
-        const filtered = result.map(element => filterObject(element, RESPONSE.listLectures))
+        const filtered = filterArray(result, RESPONSE.listLectures)
 
         res.end(JSON.stringify(filtered))
     },
@@ -48,14 +48,26 @@ module.exports = {
             code: req.$params.lecture_code
         }
         
-        await Promise.all(
-            [
-                ctx.call(STUDIES.ENROLL_LECTURE).with(enrollData).then(),
-                ctx.call(USER.ENROLL_LECTURE).with(enrollData).then()
-            ]
-        )
+        await ctx.call(STUDIES.ENROLL_LECTURE).with(enrollData).then(),
+        await ctx.call(USER.ENROLL_LECTURE).with(enrollData).then()
 
         res.end(JSON.stringify(RESPONSE.enrollLecture))
+    },
+
+
+    async 'POST lecture/drop/:lecture_code'(req, res){
+        const ctx = using(req, res)
+        if(!ctx.isAuthorized(AUTHORIZATION.STUDENT)) { return }
+
+        const dropLectureData = {
+            user: req.$ctx.meta.user.email,
+            code: req.$params.lecture_code
+        }
+        
+        await  ctx.call(STUDIES.DROP_LECTURE).with(dropLectureData).then(),
+        await  ctx.call(USER.DROP_LECTURE).with(dropLectureData).then()
+
+        res.end(JSON.stringify(RESPONSE.dropLecture.success))
     }
 
 }

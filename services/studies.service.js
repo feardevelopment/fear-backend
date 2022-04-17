@@ -14,7 +14,8 @@ module.exports = {
         CREATE_NEW_LECTURE: 'studies.createNewLecture',
         LIST_LECTURES: 'studies.listLectures',
         FIND_LECTURES: 'studies.findLectures',
-        ENROLL_LECTURE: 'studies.enrollLecture'
+        ENROLL_LECTURE: 'studies.enrollLecture',
+        DROP_LECTURE: 'studies.dropLecture'
     },
     settings: {},
 
@@ -54,6 +55,10 @@ module.exports = {
             /** @param {Context} ctx */
             async handler(ctx) {
                 const lecture = await this.adapter.findOne({code: ctx.params.code})
+
+                if(!lecture){
+                    throw new Error('No lecture exists by id ' + ctx.params.code)
+                }
                 console.log(lecture)
 
                 if(!lecture.enrolledBy.includes(ctx.params.user)){
@@ -62,8 +67,27 @@ module.exports = {
 
                 return this.adapter.updateById(lecture._id, lecture)
             }
-
         },
+        dropLecture: {
+            params: requests.dropLecture,
+            /** @param {Context} ctx */
+            async handler(ctx) {
+                const lecture = await this.adapter.findOne({code: ctx.params.code})
+
+                if(!lecture){
+                    throw new Error('No lecture exists by id ' + ctx.params.code)
+                }
+                
+                const students = new Set(lecture.enrolledBy)
+
+                if(students.has(ctx.params.user)) {
+                    students.delete(ctx.params.user)
+                    lecture.enrolledBy = Array.from(students)
+                }
+                
+                return this.adapter.updateById(lecture._id, lecture)
+            }
+        }
     },
 
     events: {},

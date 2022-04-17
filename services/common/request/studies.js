@@ -12,5 +12,9 @@ module.exports = {
     enrollLecture: {
         code: 'string',
         user: 'string'
+    },
+    dropLecture: {
+        code: 'string',
+        user: 'string'
     }
 }

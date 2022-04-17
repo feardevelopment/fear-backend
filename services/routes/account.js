@@ -1,8 +1,10 @@
 const AUTH_ENDPOINTS = require('../auth.service').ENDPOINTS
+const USER = require('../user.service').ENDPOINTS
 const RESPONSES = require('../common/response')
 const AUTHORIZATION = require('../common/role.json')
 const { using } = require('../common/authorization')
 
+const { filterObject, filterArray } = require('../common/mapper')
 
 module.exports = {
     async 'POST auth/register'(req, res) {
@@ -26,6 +28,14 @@ module.exports = {
         res.end(stringified)
     },
 
+    async 'GET user/me'(req, res) {
+        const ctx = using(req, res)
+        if(!ctx.isAuthorized(AUTHORIZATION.STUDENT)) { return }
+
+        const result = await ctx.call(USER.GET).with({email: req.$ctx.meta.user.email}).then()
+
+        res.end(JSON.stringify(filterObject(result, RESPONSES.user.userData)))
+    },
 
     async 'POST auth/device/add/:deviceID'(req, res) {
         const ctx = using(req, res)

@@ -10,6 +10,10 @@ module.exports = {
             }, {})
     },
 
+    filterArray: function (array, allowed) {
+        return array.map(element => module.exports.filterObject(element, allowed))
+    },
+
     createResponse: function (result, template) {
 
     }

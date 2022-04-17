@@ -13,5 +13,10 @@ module.exports = {
     },
     enrollLecture:{
         message: "Success"
+    },
+    dropLecture: {
+        success:{
+            message: 'Success'
+        }
     }
 }

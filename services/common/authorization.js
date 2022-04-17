@@ -21,7 +21,7 @@ module.exports = {
                                         resolve(result)
                                     } catch (error) {
                                         res.setHeader('Content-Type', 'text/json')
-                                        res.writeHead(501)
+                                        res.writeHead(500)
                                         res.end(JSON.stringify({
                                             message: error.message
                                         }))
